@@ -18,6 +18,33 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+      if (window.BRAND_CONFIG) {
+        if (window.BRAND_CONFIG.brand) {
+          if (window.BRAND_CONFIG.brand.title) {
+            document.title = window.BRAND_CONFIG.brand.title;
+          }
+          if (window.BRAND_CONFIG.brand.metaDescription) {
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+              metaDesc.setAttribute('content', window.BRAND_CONFIG.brand.metaDescription);
+            }
+          }
+        }
+        if (window.BRAND_CONFIG.colors) {
+          const rootStyle = [];
+          for (const [key, val] of Object.entries(window.BRAND_CONFIG.colors)) {
+            rootStyle.push(`${key}: ${val};`);
+          }
+          if (rootStyle.length) {
+            const style = document.createElement('style');
+            style.innerHTML = `:root { ${rootStyle.join(' ')} }`;
+            document.head.appendChild(style);
+          }
+        }
+      }
+    </script>
 
     <style>
       /* ============================================================
@@ -562,6 +589,14 @@
         .burger {
           display: flex;
         }
+
+        .nav.menu-open .brand {
+          color: var(--ink) !important;
+        }
+
+        .nav.menu-open .burger span {
+          background: var(--ink) !important;
+        }
       }
 
       /* ============================================================
@@ -768,6 +803,23 @@
         background: radial-gradient(circle, var(--gold-light), transparent 70%);
         opacity: 0.5;
         filter: blur(1px);
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          min-height: 100vh;
+          height: auto;
+          align-items: center;
+          padding: 120px 0 80px;
+        }
+
+        .hero-inner {
+          padding-bottom: 0;
+        }
+
+        .scroll-cue {
+          display: none;
+        }
       }
 
       /* Ticker */
@@ -1147,6 +1199,15 @@
         flex-wrap: wrap;
         gap: 2rem;
         margin-bottom: 3.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .pf-head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.5rem;
+          margin-bottom: 2.5rem;
+        }
       }
 
       .pf-filters {
@@ -2380,7 +2441,7 @@
           d="M100 40 C 60 40 40 75 55 105 C 65 125 95 120 100 100 C 105 80 135 75 145 100 C 155 125 130 155 100 160 C 65 165 40 135 45 105"
         />
       </svg>
-      <div class="loader-word">Henna by Eishah</div>
+      <div class="loader-word" id="loaderWord">Henna by Eishah</div>
       <div class="loader-bar"><span id="loaderProgress"></span></div>
     </div>
 
@@ -2390,7 +2451,7 @@
 
     <!-- NAV -->
     <nav class="nav" id="nav">
-      <a href="#hero" class="brand">EISHAH<small>Henna Artistry</small></a>
+      <a href="#hero" class="brand" id="navBrand">EISHAH<small>Henna Artistry</small></a>
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#services">Services</a>
@@ -2509,6 +2570,7 @@
               transition: transform 1.4s var(--ease);
             "
             class="about-img"
+            id="aboutImg"
           />
           <div class="duotone"></div>
           <svg
@@ -2534,41 +2596,43 @@
               d="M50 300 C 80 250 60 180 100 150 C 140 120 120 60 160 40 C 200 20 240 60 230 100 C 220 140 250 190 220 230 C 190 270 200 320 160 340"
             />
           </svg>
-          <div class="about-badge">
+          <div class="about-badge" id="aboutBadge">
             <div><span>10+</span><small>Years Artistry</small></div>
           </div>
         </div>
         <div class="about-body">
-          <div class="eyebrow">The Artist</div>
-          <h2 style="font-size: clamp(2rem, 4vw, 3.1rem); margin-top: 1.1rem">
+          <div class="eyebrow" id="aboutEyebrow">The Artist</div>
+          <h2 id="aboutTitle" style="font-size: clamp(2rem, 4vw, 3.1rem); margin-top: 1.1rem">
             A quiet devotion<br />to the art of henna.
           </h2>
-          <p class="lead">
+          <p class="lead" id="aboutLead">
             Every design begins the same way — with a conversation, not a
             template.
           </p>
-          <p>
-            Eishah has spent over a decade refining a signature style that sits
-            between tradition and fine art: intricate linework, considered
-            negative space, and motifs drawn to flatter the hand they're placed
-            on. Trained in classical Indo-Arabic technique and shaped by years
-            working closely with brides across the UK, her approach treats each
-            booking as a single, unrepeatable commission.
-          </p>
-          <p>
-            From intimate pre-wedding sittings to full bridal parties of forty
-            guests, the studio's philosophy stays the same: natural henna,
-            unhurried craftsmanship, and a finished stain that deepens
-            beautifully over the days that follow — because a henna design
-            should still feel special on the honeymoon, not just the wedding
-            morning.
-          </p>
-          <div class="about-tags">
+          <div id="aboutDesc">
+            <p>
+              Eishah has spent over a decade refining a signature style that sits
+              between tradition and fine art: intricate linework, considered
+              negative space, and motifs drawn to flatter the hand they're placed
+              on. Trained in classical Indo-Arabic technique and shaped by years
+              working closely with brides across the UK, her approach treats each
+              booking as a single, unrepeatable commission.
+            </p>
+            <p>
+              From intimate pre-wedding sittings to full bridal parties of forty
+              guests, the studio's philosophy stays the same: natural henna,
+              unhurried craftsmanship, and a finished stain that deepens
+              beautifully over the days that follow — because a henna design
+              should still feel special on the honeymoon, not just the wedding
+              morning.
+            </p>
+          </div>
+          <div class="about-tags" id="aboutTags">
             <span>Bridal Henna</span><span>Luxury Weddings</span
             ><span>Mehndi Events</span><span>Eid</span><span>Parties</span
             ><span>Private Bookings</span>
           </div>
-          <div class="about-stats">
+          <div class="about-stats" id="aboutStats">
             <div>
               <h3>500+</h3>
               <small>Brides Adorned</small>
@@ -2594,16 +2658,16 @@
     <section class="services" id="services">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <div class="eyebrow">Signature Services</div>
-          <h2>Crafted for every kind of celebration.</h2>
-          <p>
+          <div class="eyebrow" id="svcEyebrow">Signature Services</div>
+          <h2 id="svcTitle">Crafted for every kind of celebration.</h2>
+          <p id="svcSubtitle">
             Six ways to bring bespoke henna artistry to your occasion — each
             tailored in consultation, never off the shelf.
           </p>
         </div>
       </div>
       <div class="wrap" style="padding: 0 6vw">
-        <div class="svc-grid" data-reveal>
+        <div class="svc-grid" data-reveal id="svcGrid">
           <div class="svc-card">
             <div>
               <div class="svc-num">Bridal</div>
@@ -2703,8 +2767,8 @@
       <div class="wrap">
         <div class="pf-head">
           <div class="section-head" style="margin-bottom: 0" data-reveal>
-            <div class="eyebrow">Portfolio</div>
-            <h2>A gallery of<br />recent commissions.</h2>
+            <div class="eyebrow" id="pfEyebrow">Portfolio</div>
+            <h2 id="pfTitle">A gallery of<br />recent commissions.</h2>
           </div>
           <div class="pf-filters" id="pfFilters">
             <button class="active" data-filter="all">All</button>
@@ -2766,12 +2830,12 @@
     <section class="why" id="why">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <div class="eyebrow">Why Henna by Eishah</div>
-          <h2>The details that set<br />a commission apart.</h2>
+          <div class="eyebrow" id="whyEyebrow">Why Henna by Eishah</div>
+          <h2 id="whyTitle">The details that set<br />a commission apart.</h2>
         </div>
       </div>
       <div class="wrap" style="padding: 0 6vw">
-        <div class="why-grid" data-reveal>
+        <div class="why-grid" data-reveal id="whyGrid">
           <div class="why-card">
             <div class="why-icon">
               <svg viewBox="0 0 24 24" stroke-width="1.4">
@@ -2855,46 +2919,12 @@
     <!-- TESTIMONIALS -->
     <section class="testi" id="testimonials">
       <div class="wrap">
-        <div class="eyebrow" style="justify-content: center">Testimonials</div>
+        <div class="eyebrow" id="testiEyebrow" style="justify-content: center">Testimonials</div>
         <div class="section-head" style="margin-top: 1.1rem">
-          <h2>Words from<br />our brides.</h2>
+          <h2 id="testiTitle">Words from<br />our brides.</h2>
         </div>
         <div class="testi-track-wrap">
-          <div class="testi-track" id="testiTrack">
-            <div class="testi-slide">
-              <div class="stars">★★★★★</div>
-              <p>
-                "Eishah made me feel like art itself. The design was more
-                intricate than anything I'd seen — and it was still stunning
-                three weeks after the wedding."
-              </p>
-              <div class="testi-who">
-                <strong>Amira K.</strong><span>Bridal Henna, London</span>
-              </div>
-            </div>
-            <div class="testi-slide">
-              <div class="stars">★★★★★</div>
-              <p>
-                "From the first consultation to the final touch-up, everything
-                felt considered. Our entire wedding party was in awe of the
-                details."
-              </p>
-              <div class="testi-who">
-                <strong>Sana R.</strong><span>Luxury Wedding, Birmingham</span>
-              </div>
-            </div>
-            <div class="testi-slide">
-              <div class="stars">★★★★★</div>
-              <p>
-                "The most professional henna experience I've booked. Eishah
-                listened, sketched, and delivered something more beautiful than
-                I imagined."
-              </p>
-              <div class="testi-who">
-                <strong>Zara M.</strong><span>Private Booking, Manchester</span>
-              </div>
-            </div>
-          </div>
+          <div class="testi-track" id="testiTrack"></div>
         </div>
         <div class="testi-controls">
           <button class="testi-arrow" id="testiPrev">
@@ -2916,14 +2946,14 @@
     <section class="process" id="process">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <div class="eyebrow">Booking Process</div>
-          <h2>A calm path to your henna day.</h2>
-          <p>
+          <div class="eyebrow" id="processEyebrow">Booking Process</div>
+          <h2 id="processTitle">A calm path to your henna day.</h2>
+          <p id="processSubtitle">
             Five simple steps carry every client from first message to the
             moment henna meets skin.
           </p>
         </div>
-        <div class="timeline" data-reveal>
+        <div class="timeline" data-reveal id="processTimeline">
           <div class="tl-step">
             <div class="tl-dot">01</div>
             <h4>Inquiry</h4>
@@ -2973,14 +3003,15 @@
       <div class="wrap">
         <div class="insta-head">
           <div class="section-head" style="margin-bottom: 0" data-reveal>
-            <div class="eyebrow">Follow Along</div>
-            <h2>@hennabyeishah</h2>
+            <div class="eyebrow" id="instaEyebrow">Follow Along</div>
+            <h2 id="instaHandle">@hennabyeishah</h2>
           </div>
           <a
             href="https://www.instagram.com/hennabyeishah"
             target="_blank"
             rel="noopener"
             class="btn btn-ghost dark magnetic"
+            id="instaFollowBtn"
             >Follow on Instagram</a
           >
         </div>
@@ -2992,76 +3023,10 @@
     <section class="faq" id="faq">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <div class="eyebrow">FAQ</div>
-          <h2>Good to know<br />before you book.</h2>
+          <div class="eyebrow" id="faqEyebrow">FAQ</div>
+          <h2 id="faqTitle">Good to know<br />before you book.</h2>
         </div>
-        <div class="faq-list" id="faqList">
-          <div class="faq-item open">
-            <div class="faq-q">
-              <h4>How far in advance should I book my bridal henna?</h4>
-              <div class="faq-toggle"></div>
-            </div>
-            <div class="faq-a">
-              <p>
-                For weddings, we recommend booking 4–6 months ahead, especially
-                for peak wedding season (May–September). Consultations can
-                happen earlier to help you plan your full bridal timeline.
-              </p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q">
-              <h4>Is the henna you use natural?</h4>
-              <div class="faq-toggle"></div>
-            </div>
-            <div class="faq-a">
-              <p>
-                Yes — every cone is hand-mixed using natural, chemical-free
-                henna paste. We never use "black henna" (PPD), which can cause
-                serious skin reactions.
-              </p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q">
-              <h4>How long does a bridal henna session take?</h4>
-              <div class="faq-toggle"></div>
-            </div>
-            <div class="faq-a">
-              <p>
-                Full bridal coverage (both hands and feet) typically takes 3–5
-                hours depending on design complexity. This is discussed in
-                detail during your design consultation.
-              </p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q">
-              <h4>Do you travel for destination weddings?</h4>
-              <div class="faq-toggle"></div>
-            </div>
-            <div class="faq-a">
-              <p>
-                Yes, Eishah is available for UK-wide and select international
-                bookings. Travel and accommodation are arranged as part of your
-                booking confirmation.
-              </p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q">
-              <h4>How do I care for my henna to get the darkest stain?</h4>
-              <div class="faq-toggle"></div>
-            </div>
-            <div class="faq-a">
-              <p>
-                You'll receive a full aftercare card at your appointment —
-                covering paste removal time, natural sealants and the first 48
-                hours, which matter most for stain depth.
-              </p>
-            </div>
-          </div>
-        </div>
+        <div class="faq-list" id="faqList"></div>
       </div>
     </section>
 
@@ -3142,7 +3107,7 @@
                   <path d="M4 4h16v16H4zM22 6l-10 7L2 6" />
                 </svg>
                 <div>
-                  <strong>Email</strong><span>hello@hennabyeishah.com</span>
+                  <strong>Email</strong><span id="contactEmail">hello@hennabyeishah.com</span>
                 </div>
               </div>
               <div class="info-row">
@@ -3151,7 +3116,7 @@
                     d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"
                   />
                 </svg>
-                <div><strong>Phone</strong><span>+44 7000 000 000</span></div>
+                <div><strong>Phone</strong><span id="contactPhone">+44 7000 000 000</span></div>
               </div>
               <div class="info-row">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
@@ -3160,7 +3125,7 @@
                 </svg>
                 <div>
                   <strong>Studio</strong
-                  ><span>By appointment · London, UK</span>
+                  ><span id="contactStudio">By appointment · London, UK</span>
                 </div>
               </div>
               <div class="map-box">
@@ -3169,7 +3134,7 @@
                   <small>Studio Location</small>
                 </div>
               </div>
-              <div class="social-row">
+              <div class="social-row" id="contactSocialRow">
                 <a
                   href="https://www.instagram.com/hennabyeishah"
                   target="_blank"
@@ -3202,8 +3167,8 @@
       <div class="wrap">
         <div class="footer-grid">
           <div>
-            <div class="footer-brand">EISHAH<small>HENNA ARTISTRY</small></div>
-            <p>
+            <div class="footer-brand" id="footerBrand">EISHAH<small>HENNA ARTISTRY</small></div>
+            <p id="footerDesc">
               Bespoke bridal and occasion henna artistry, crafted with natural
               ingredients and unhurried care across the UK.
             </p>
@@ -3234,7 +3199,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <span>© 2026 Henna by Eishah. All rights reserved.</span>
+          <span id="footerCopyright">© 2026 Henna by Eishah. All rights reserved.</span>
           <span class="credit"
             >Concept design &amp; development — presented as a portfolio
             pitch</span
@@ -3264,6 +3229,233 @@
 
     <script>
       gsap.registerPlugin(ScrollTrigger);
+
+      // Populate config-driven elements
+      if (window.BRAND_CONFIG) {
+        const c = window.BRAND_CONFIG;
+
+        // Brand & Logo
+        if (c.brand) {
+          const lWord = document.getElementById("loaderWord");
+          if (lWord) lWord.textContent = c.brand.fullName;
+          const nBrand = document.getElementById("navBrand");
+          if (nBrand) nBrand.innerHTML = `${c.brand.name}<small>${c.brand.small}</small>`;
+          const fBrand = document.getElementById("footerBrand");
+          if (fBrand) fBrand.innerHTML = `${c.brand.name.toUpperCase()}<small>${c.brand.small.toUpperCase()}</small>`;
+          const fCopyright = document.getElementById("footerCopyright");
+          if (fCopyright) fCopyright.textContent = `© ${new Date().getFullYear()} ${c.brand.fullName}. All rights reserved.`;
+        }
+
+        // Contact & Socials
+        if (c.contact) {
+          const cEmail = document.getElementById("contactEmail");
+          if (cEmail) cEmail.textContent = c.contact.email;
+          const cPhone = document.getElementById("contactPhone");
+          if (cPhone) cPhone.textContent = c.contact.phone;
+          const cStudio = document.getElementById("contactStudio");
+          if (cStudio) cStudio.textContent = c.contact.studio;
+          
+          const waBtn = document.getElementById("whatsappBtn");
+          if (waBtn) waBtn.href = c.contact.whatsappLink;
+
+          const socialRow = document.getElementById("contactSocialRow");
+          if (socialRow) {
+            const links = socialRow.querySelectorAll("a");
+            if (links[0]) {
+              links[0].href = c.contact.instagramLink;
+              links[0].setAttribute("aria-label", "Instagram");
+            }
+            if (links[1]) {
+              links[1].href = c.contact.facebookLink;
+              links[1].setAttribute("aria-label", "Facebook");
+            }
+            if (links[2]) {
+              links[2].href = c.contact.twitterLink;
+              links[2].setAttribute("aria-label", "Twitter");
+            }
+          }
+        }
+
+        // Hero
+        if (c.hero) {
+          const hEyebrow = document.getElementById("heroEyebrow");
+          if (hEyebrow) hEyebrow.textContent = c.hero.eyebrow;
+          const hTitle = document.getElementById("heroTitle");
+          if (hTitle && c.hero.titleLines) {
+            hTitle.innerHTML = c.hero.titleLines.map(line => `<span class="line"><span>${line}</span></span>`).join('');
+          }
+          const hSub = document.getElementById("heroSub");
+          if (hSub) hSub.textContent = c.hero.subtitle;
+          const hCta = document.getElementById("heroCta");
+          if (hCta) {
+            const btns = hCta.querySelectorAll("a");
+            if (btns[0]) btns[0].textContent = c.hero.ctaBookText;
+            if (btns[1]) btns[1].textContent = c.hero.ctaPortfolioText;
+          }
+        }
+
+        // About
+        if (c.about) {
+          const aImg = document.getElementById("aboutImg");
+          if (aImg) {
+            aImg.src = c.about.image;
+            aImg.alt = c.about.imageAlt;
+          }
+          const aBadge = document.getElementById("aboutBadge");
+          if (aBadge) aBadge.innerHTML = `<div><span>${c.about.badgeValue}</span><small>${c.about.badgeLabel}</small></div>`;
+          const aEyebrow = document.getElementById("aboutEyebrow");
+          if (aEyebrow) aEyebrow.textContent = c.about.eyebrow;
+          const aTitle = document.getElementById("aboutTitle");
+          if (aTitle) aTitle.innerHTML = c.about.title;
+          const aLead = document.getElementById("aboutLead");
+          if (aLead) aLead.textContent = c.about.lead;
+          const aDesc = document.getElementById("aboutDesc");
+          if (aDesc && c.about.description) {
+            aDesc.innerHTML = c.about.description.split('\n\n').map(p => `<p>${p}</p>`).join('');
+          }
+          const fDesc = document.getElementById("footerDesc");
+          if (fDesc && c.about.description) {
+            fDesc.textContent = c.about.lead;
+          }
+          const aTags = document.getElementById("aboutTags");
+          if (aTags && c.about.tags) {
+            aTags.innerHTML = c.about.tags.map(t => `<span>${t}</span>`).join('');
+          }
+          const aStats = document.getElementById("aboutStats");
+          if (aStats && c.about.stats) {
+            aStats.innerHTML = c.about.stats.map(s => `<div><h3>${s.value}</h3><small>${s.label}</small></div>`).join('');
+          }
+        }
+
+        // Services
+        if (c.services) {
+          const sEyebrow = document.getElementById("svcEyebrow");
+          if (sEyebrow) sEyebrow.textContent = c.services.eyebrow;
+          const sTitle = document.getElementById("svcTitle");
+          if (sTitle) sTitle.textContent = c.services.title;
+          const sSubtitle = document.getElementById("svcSubtitle");
+          if (sSubtitle) sSubtitle.textContent = c.services.subtitle;
+          const sGrid = document.getElementById("svcGrid");
+          if (sGrid && c.services.list) {
+            sGrid.innerHTML = c.services.list.map(svc => `
+              <div class="svc-card">
+                <div>
+                  <div class="svc-num">${svc.num}</div>
+                  <h3>${svc.title}</h3>
+                  <p>${svc.desc}</p>
+                </div>
+                <div class="svc-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M5 19L19 5M19 5H8M19 5V16" />
+                  </svg>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Portfolio section titles
+        if (c.portfolio) {
+          const pEyebrow = document.getElementById("pfEyebrow");
+          if (pEyebrow) pEyebrow.textContent = c.portfolio.eyebrow;
+          const pTitle = document.getElementById("pfTitle");
+          if (pTitle) pTitle.innerHTML = c.portfolio.title;
+        }
+
+        // Why Choose Us
+        if (c.whyChooseUs) {
+          const wEyebrow = document.getElementById("whyEyebrow");
+          if (wEyebrow) wEyebrow.textContent = c.whyChooseUs.eyebrow;
+          const wTitle = document.getElementById("whyTitle");
+          if (wTitle) wTitle.innerHTML = c.whyChooseUs.title;
+          const wGrid = document.getElementById("whyGrid");
+          if (wGrid && c.whyChooseUs.items) {
+            wGrid.innerHTML = c.whyChooseUs.items.map(item => `
+              <div class="why-card">
+                <div class="why-icon">
+                  <svg viewBox="0 0 24 24" stroke-width="1.4">
+                    ${item.icon}
+                  </svg>
+                </div>
+                <h3>${item.title}</h3>
+                <p>${item.desc}</p>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Booking Process
+        if (c.bookingProcess) {
+          const prEyebrow = document.getElementById("processEyebrow");
+          if (prEyebrow) prEyebrow.textContent = c.bookingProcess.eyebrow;
+          const prTitle = document.getElementById("processTitle");
+          if (prTitle) prTitle.textContent = c.bookingProcess.title;
+          const prSubtitle = document.getElementById("processSubtitle");
+          if (prSubtitle) prSubtitle.textContent = c.bookingProcess.subtitle;
+          const prTimeline = document.getElementById("processTimeline");
+          if (prTimeline && c.bookingProcess.steps) {
+            prTimeline.innerHTML = c.bookingProcess.steps.map(step => `
+              <div class="tl-step">
+                <div class="tl-dot">${step.dot}</div>
+                <h4>${step.title}</h4>
+                <p>${step.desc}</p>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Instagram Feed Section Titles & Link
+        if (c.instagram) {
+          const iEyebrow = document.getElementById("instaEyebrow");
+          if (iEyebrow) iEyebrow.textContent = c.instagram.eyebrow;
+          const iHandle = document.getElementById("instaHandle");
+          if (iHandle) iHandle.textContent = c.contact.instagramHandle;
+          const iFollowBtn = document.getElementById("instaFollowBtn");
+          if (iFollowBtn) iFollowBtn.href = c.contact.instagramLink;
+        }
+
+        // FAQ
+        if (c.faq) {
+          const fEyebrow = document.getElementById("faqEyebrow");
+          if (fEyebrow) fEyebrow.textContent = c.faq.eyebrow;
+          const fTitle = document.getElementById("faqTitle");
+          if (fTitle) fTitle.innerHTML = c.faq.title;
+          const fList = document.getElementById("faqList");
+          if (fList && c.faq.list) {
+            fList.innerHTML = c.faq.list.map((item, idx) => `
+              <div class="faq-item ${idx === 0 ? 'open' : ''}">
+                <div class="faq-q">
+                  <h4>${item.q}</h4>
+                  <div class="faq-toggle"></div>
+                </div>
+                <div class="faq-a">
+                  <p>${item.a}</p>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Testimonials slides
+        if (c.testimonials) {
+          const tEyebrow = document.getElementById("testiEyebrow");
+          if (tEyebrow) tEyebrow.textContent = c.testimonials.eyebrow;
+          const tTitle = document.getElementById("testiTitle");
+          if (tTitle) tTitle.innerHTML = c.testimonials.title;
+          const tTrack = document.getElementById("testiTrack");
+          if (tTrack && c.testimonials.list) {
+            tTrack.innerHTML = c.testimonials.list.map(t => `
+              <div class="testi-slide">
+                <div class="stars">${t.stars}</div>
+                <p>"${t.quote}"</p>
+                <div class="testi-who">
+                  <strong>${t.author}</strong><span>${t.location}</span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      }
 
       /* ---------------- data ---------------- */
       const palettes = [
@@ -3325,7 +3517,7 @@
     <div class="frame" style="z-index:3;"></div></div>`;
       }
 
-      const portfolioData = [
+      const portfolioData = (window.BRAND_CONFIG && window.BRAND_CONFIG.portfolio && window.BRAND_CONFIG.portfolio.list) || [
         {
           cat: "bridal",
           title: "The Amira Bridal Set",
@@ -3491,11 +3683,13 @@
       burger.addEventListener("click", () => {
         burger.classList.toggle("open");
         mobileMenu.classList.toggle("open");
+        document.getElementById("nav").classList.toggle("menu-open");
       });
       mobileMenu.querySelectorAll("a").forEach((a) =>
         a.addEventListener("click", () => {
           burger.classList.remove("open");
           mobileMenu.classList.remove("open");
+          document.getElementById("nav").classList.remove("menu-open");
         }),
       );
 
@@ -3747,7 +3941,7 @@
 
       /* ---------------- instagram grid ---------------- */
       const instaGrid = document.getElementById("instaGrid");
-      const instaImages = [
+      const instaImages = (window.BRAND_CONFIG && window.BRAND_CONFIG.instagram && window.BRAND_CONFIG.instagram.posts) || [
         "photo-1684813270065-73dce8b31b92",
         "photo-1684814070823-97e0b9e99c69",
         "photo-1702378154233-9b870ff8f1b3",
@@ -3755,18 +3949,46 @@
         "photo-1583878545451-a83daf591083",
         "photo-1587271598589-3f91d0872f66",
       ];
-      for (let i = 0; i < 6; i++) {
+      const instaLink = (window.BRAND_CONFIG && window.BRAND_CONFIG.contact && window.BRAND_CONFIG.contact.instagramLink) || "https://www.instagram.com/hennabyeishah";
+      const brandFullName = (window.BRAND_CONFIG && window.BRAND_CONFIG.brand && window.BRAND_CONFIG.brand.fullName) || "Henna by Eishah";
+      
+      for (let i = 0; i < Math.min(instaImages.length, 6); i++) {
         const el = document.createElement("a");
-        el.href = "https://www.instagram.com/hennabyeishah";
+        el.href = instaLink;
         el.target = "_blank";
         el.rel = "noopener";
         el.className = "insta-item";
-        el.innerHTML = `${artBlockHTML(i + 3, "Henna by Eishah Instagram post", instaImages[i])}<div class="ov" style="z-index:4;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></div>`;
+        el.innerHTML = `${artBlockHTML(i + 3, brandFullName + " Instagram post", instaImages[i])}<div class="ov" style="z-index:4;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></div>`;
         instaGrid.appendChild(el);
       }
 
       /* ---------------- testimonials carousel ---------------- */
       const testiTrack = document.getElementById("testiTrack");
+      if (testiTrack.children.length === 0) {
+        testiTrack.innerHTML = `
+          <div class="testi-slide">
+            <div class="stars">★★★★★</div>
+            <p>"Eishah made me feel like art itself. The design was more intricate than anything I'd seen — and it was still stunning three weeks after the wedding."</p>
+            <div class="testi-who">
+              <strong>Amira K.</strong><span>Bridal Henna, London</span>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="stars">★★★★★</div>
+            <p>"From the first consultation to the final touch-up, everything felt considered. Our entire wedding party was in awe of the details."</p>
+            <div class="testi-who">
+              <strong>Sana R.</strong><span>Luxury Wedding, Birmingham</span>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="stars">★★★★★</div>
+            <p>"The most professional henna experience I've booked. Eishah listened, sketched, and delivered something more beautiful than I imagined."</p>
+            <div class="testi-who">
+              <strong>Zara M.</strong><span>Private Booking, Manchester</span>
+            </div>
+          </div>
+        `;
+      }
       const originalSlides = Array.from(
         testiTrack.querySelectorAll(".testi-slide"),
       );
